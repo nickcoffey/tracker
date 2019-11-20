@@ -38,7 +38,8 @@ const connection = mongoose.connect(`mongodb://${mlab.user}:${mlab.password}@${m
 })
 
 // Routes
-app.use('/api/category', require('./routes/categoryRoutes'))
+const api = '/api'
+app.use(`${api}/category`, require('./routes/categoryRoutes'))
 
 // Start app
 app.listen(port, () => {logger.info(`App listen is listening on port ${port}`)})
