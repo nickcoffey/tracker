@@ -1,7 +1,7 @@
-module.exports.mlab = {
-    host: 'ds229088.mlab.com',
-    user: 'root1',
-    password: process.env.MLAB_PW,
-    port: '29088',
+module.exports.pg_local = {
+    host: 'localhost',
+    user: 'postgres',
+    password: process.env.PG_PW,
+    port: '5432',
     database: 'tracker'
 }

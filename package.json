@@ -2,9 +2,13 @@
   "name": "tracker",
   "version": "1.0.0",
   "description": "Workout tracker",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/njc3n3/tracker.git"
+  },
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha || true",
     "start": "nodemon index.js"
   },
   "author": "Nick Coffey",
@@ -13,7 +17,10 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "log4js": "^5.1.0",
-    "mongodb": "^3.3.2",
-    "mongoose": "^5.7.5"
+    "pg": "^7.14.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.2.2"
   }
 }

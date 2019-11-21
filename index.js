@@ -1,6 +1,5 @@
 // App setup
 const express = require('express')
-const path = require('path')
 const app = express()
 var port = 3000
 const config = require('./config/database')
@@ -20,22 +19,16 @@ logger.level = 'TRACE'
 module.exports.logger = logger
 
 // DB setup
-const mlab = config.mlab
-const mongoose = require('mongoose')
-module.exports.mongoose = mongoose
-const Schema = mongoose.Schema
-module.exports.Schema = Schema
-mongoose.set('useNewUrlParser', true)
-mongoose.set('useFindAndModify', false)
-mongoose.set('useCreateIndex', true)
-mongoose.set('useUnifiedTopology', true)
-const connection = mongoose.connect(`mongodb://${mlab.user}:${mlab.password}@${mlab.host}:${mlab.port}/${mlab.database}`, (err, db) => {
-    if(err){
-        logger.error('DB connection failed', err)
+const { Client } = require('pg')
+const client = new Client(config.pg_local)
+client.connect(err => {
+    if(err) {
+        logger.error('DB connection error', err)
     } else {
-        logger.info('DB connection successful')
+        logger.info('DB connected')
     }
 })
+module.exports.db = client
 
 // Routes
 const api = '/api'
