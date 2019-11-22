@@ -33,6 +33,10 @@ module.exports.db = client
 // Routes
 const api = '/api'
 app.use(`${api}/category`, require('./routes/categoryRoutes'))
+app.use(`${api}/lift`, require('./routes/liftRoutes'))
+app.use(`${api}/workout`, require('./routes/workoutRoutes'))
 
 // Start app
 app.listen(port, () => {logger.info(`App listen is listening on port ${port}`)})
+
+module.exports.app = app

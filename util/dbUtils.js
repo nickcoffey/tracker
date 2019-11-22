@@ -28,23 +28,25 @@ function runQuery(text, values, res, pass_msg, fail_msg, isSelectOrUpdateAll, is
     })
 }
 
-module.exports.formatInsertQuery = function formatInsertQuery(table, fields) {
+module.exports.formatInsertQuery = function formatInsertQuery(table, fields, returnFields) {
     var fieldText = ''
     var valuesText = ''
-    var returnText = 'id,'
     fields.forEach((field, index) => {  
         index += 1
         fieldText += `${field},`
         valuesText += `$${index},`
-        returnText += `${field},`
     })
     fieldText = fieldText.slice(0, -1)
     valuesText = valuesText.slice(0, -1)
+    var returnText = ''
+    returnFields.forEach(field => {
+        returnText += `${field},`
+    })
     returnText = returnText.slice(0, -1)
     return `INSERT INTO ${table}(${fieldText}) VALUES(${valuesText}) RETURNING ${returnText}`
 }
-module.exports.insert = function insert(res, table, fields, values, pass_msg, fail_msg) {
-    var text = this.formatInsertQuery(table, fields)
+module.exports.insert = function insert(res, table, fields, values, returnFields, pass_msg, fail_msg) {
+    var text = this.formatInsertQuery(table, fields, returnFields)
     runQuery(text, values, res, pass_msg, fail_msg, false, false)
 }
 
@@ -61,24 +63,29 @@ module.exports.selectAll = function selectAll(res, table, fields, pass_msg, fail
     runQuery(text, [], res, pass_msg, fail_msg, true, false)
 }
 
-module.exports.formatSelectAllWhereQuery = function formatSelectAllWhereQuery(table, fields) {
+module.exports.formatSelectWhereQuery = function formatSelectWhereQuery(table, selectFields, whereFields) {
+    var selectText = ''
+    selectFields.forEach(field => {
+        selectText += `${field},`
+    })
+    selectText = selectText.slice(0, -1)
     var whereText = ''
-    fields.forEach((field, index) => {
+    whereFields.forEach((field, index) => {
         whereText += `${field}=$${index+1} AND `
     })
     whereText = whereText.slice(0, -5)
-    return `SELECT * FROM ${table} WHERE ${whereText}`
+    return `SELECT ${selectText} FROM ${table} WHERE ${whereText}`
 }
-module.exports.selectAllWhere = function selectAllWhere(res, table, fields, values, pass_msg, fail_msg) {
-    var text = this.formatSelectAllWhereQuery(table, fields)
-    runQuery(text, values, res, pass_msg, fail_msg, true, false)
-}
-module.exports.selectByID = function selectByID(res, table, fields, values, pass_msg, fail_msg) {
-    var text = this.formatSelectAllWhereQuery(table, fields)
+module.exports.selectWhere = function selectWhere(res, table, selectFields, whereFields, values, pass_msg, fail_msg) {
+    var text = this.formatSelectWhereQuery(table, selectFields, whereFields)
     runQuery(text, values, res, pass_msg, fail_msg, false, false)
 }
+module.exports.selectByID = function selectByID(res, table, selectFields, whereID, pass_msg, fail_msg) {
+    var text = this.formatSelectWhereQuery(table, selectFields, ['id'])
+    runQuery(text, [whereID], res, pass_msg, fail_msg, false, false)
+}
 
-module.exports.formatUpdateWhereQuery = function formatUpdateWhereQuery(table, setFields, whereFields) {
+module.exports.formatUpdateWhereQuery = function formatUpdateWhereQuery(table, setFields, whereFields, returnFields) {
     var index = 0
     var setText = ''
     setFields.forEach(field => {
@@ -92,15 +99,20 @@ module.exports.formatUpdateWhereQuery = function formatUpdateWhereQuery(table, s
         whereText += `${field}=$${index} AND `
     })
     whereText = whereText.slice(0, -5)
-    return `UPDATE ${table} SET ${setText} WHERE ${whereText} RETURNING id,name,description`
+    var returnText = ''
+    returnFields.forEach(field => {
+        returnText += `${field},`
+    })
+    returnText = returnText.slice(0, -1)
+    return `UPDATE ${table} SET ${setText} WHERE ${whereText} RETURNING ${returnText}`
 }
-module.exports.updateAllWhere = function updateAllWhere(res, table, setFields, setValues, whereFields, whereValues, pass_msg, fail_msg) {
-    var text = this.formatUpdateWhereQuery(table, setFields, whereFields)
+module.exports.updateAllWhere = function updateAllWhere(res, table, setFields, setValues, whereFields, whereValues, returnFields, pass_msg, fail_msg) {
+    var text = this.formatUpdateWhereQuery(table, setFields, whereFields, returnFields)
     setValues.push(whereValues)
     runQuery(text, setValues, res, pass_msg, fail_msg, true, false)
 }
-module.exports.updateOneByID = function updateOneByID(res, table, setFields, setValues, whereID, pass_msg, fail_msg) {
-    var text = this.formatUpdateWhereQuery(table, setFields, ['id'])
+module.exports.updateOneByID = function updateOneByID(res, table, setFields, setValues, whereID, returnFields, pass_msg, fail_msg) {
+    var text = this.formatUpdateWhereQuery(table, setFields, ['id'], returnFields)
     setValues.push(whereID)
     runQuery(text, setValues, res, pass_msg, fail_msg, false, false)
 }
