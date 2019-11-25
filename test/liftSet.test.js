@@ -1,42 +1,52 @@
 var expect = require('chai').expect
 var testUtils = require('./testUtils')
+var describe = testUtils.describe
+var it = testUtils.it
 
-describe('Lift_set API', () => {
-    var url = '/api/lift_set'
-    var lift_setID = 0
-    var notFoundLift_setID = 0
-    var workout_lift_id = 1
+describe('LiftSet API', () => {
+    var url = '/api/liftSet'
+    var liftSetID = 0
+    var notFoundLiftSetID = 0
+    var workoutLiftID = 1
     var weight = 100
     var reps = 10
     var updateWeight = 200
     var updateReps = 4
 
     describe('Create', () => {
-        it('should create a new lift_set', (done) => {
-            testUtils.post(url, {workout_lift_id: `${workout_lift_id}`, weight: weight, reps: reps})
+        it('should create a new liftSet', (done) => {
+            testUtils.post(url, { workoutLiftID: `${workoutLiftID}`, weight: weight, reps: reps })
                 .end((err, res) => {
-                    var data = res.body.data
-                    testUtils.checkResponse(res.body, true, 'Lift_set saved')
-                    expect(data.id).to.be.a('number')
-                    expect(data.workout_lift_id).to.equal(workout_lift_id)
-                    expect(data.weight).to.equal(weight)
-                    expect(data.reps).to.equal(reps)
-                    lift_setID = data.id
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        var data = res.body.data
+                        testUtils.checkResponse(res.body, true, 'LiftSet saved')
+                        expect(data.id).to.be.a('number')
+                        expect(data.workoutliftid).to.equal(workoutLiftID)
+                        expect(data.weight).to.equal(weight)
+                        expect(data.reps).to.equal(reps)
+                        liftSetID = data.id
+                    }
                     done()
                 })
         })
     })
 
     describe('Get All', () => {
-        it('should return all lift_sets', (done) => {
+        it('should return all liftSets', (done) => {
             testUtils.get(`${url}/all`, {})
                 .end((err, res) => {
-                    var data = res.body.data[0]
-                    testUtils.checkResponse(res.body, true, 'Lift_sets found')
-                    expect(data.id).to.be.a('number')
-                    expect(data.workout_lift_id).to.be.a('number')
-                    expect(data.weight).to.be.a('number')
-                    expect(data.reps).to.be.a('number')
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        var data = res.body.data[0]
+                        testUtils.checkResponse(res.body, true, 'LiftSets found')
+                        expect(data.id).to.be.a('number')
+                        expect(data.workoutliftid).to.be.a('number')
+                        expect(data.weight).to.be.a('number')
+                        expect(data.reps).to.be.a('number')
+                    }
                     done()
                 })
         })
@@ -44,24 +54,32 @@ describe('Lift_set API', () => {
 
     describe('Get One By ID - Not Found', () => {
         it('should return a not found message', (done) => {
-            testUtils.get(url, {id: notFoundLift_setID})
+            testUtils.get(url, { id: notFoundLiftSetID })
                 .end((err, res) => {
-                    testUtils.checkResponse(res.body, false, `Lift_set ${notFoundLift_setID} not found`)
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        testUtils.checkResponse(res.body, false, `LiftSet ${notFoundLiftSetID} not found`)
+                    }
                     done()
                 })
         })
     })
 
     describe('Get One By ID', () => {
-        it('should return the correct lift_set', (done) => {
-            testUtils.get(url, {id: lift_setID})
+        it('should return the correct liftSet', (done) => {
+            testUtils.get(url, { id: liftSetID })
                 .end((err, res) => {
-                    var data = res.body.data
-                    testUtils.checkResponse(res.body, true, 'Lift_set found')
-                    expect(data.id).to.equal(lift_setID)
-                    expect(data.workout_lift_id).to.equal(workout_lift_id)
-                    expect(data.weight).to.equal(weight)
-                    expect(data.reps).to.equal(reps)
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        var data = res.body.data
+                        testUtils.checkResponse(res.body, true, 'LiftSet found')
+                        expect(data.id).to.equal(liftSetID)
+                        expect(data.workoutliftid).to.equal(workoutLiftID)
+                        expect(data.weight).to.equal(weight)
+                        expect(data.reps).to.equal(reps)
+                    }
                     done()
                 })
         })
@@ -69,24 +87,32 @@ describe('Lift_set API', () => {
 
     describe('Update One - Not Found', () => {
         it('should return a not updated message', (done) => {
-            testUtils.put(url, {id: notFoundLift_setID, workout_lift_id: '0', 'weight': updateWeight, reps: updateReps})
+            testUtils.put(url, { id: notFoundLiftSetID, workoutLiftID: '0', weight: updateWeight, reps: updateReps })
                 .end((err, res) => {
-                    testUtils.checkResponse(res.body, false, `Lift_set ${notFoundLift_setID} not updated`)
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        testUtils.checkResponse(res.body, false, `LiftSet ${notFoundLiftSetID} not updated`)
+                    }
                     done()
                 })
         })
     })
 
     describe('Update One By ID', () => {
-        it('should update one lift_set', (done) => {
-            testUtils.put(url, {id: lift_setID, workout_lift_id: `${workout_lift_id}`,'weight': updateWeight, reps: updateReps})
+        it('should update one liftSet', (done) => {
+            testUtils.put(url, { id: liftSetID, workoutLiftID: `${workoutLiftID}`, weight: updateWeight, reps: updateReps })
                 .end((err, res) => {
-                    var data = res.body.data
-                    testUtils.checkResponse(res.body, true, 'Lift_set updated')
-                    expect(data.id).to.equal(lift_setID)
-                    expect(data.workout_lift_id).to.equal(workout_lift_id)
-                    expect(data.weight).to.equal(updateWeight)
-                    expect(data.reps).to.equal(updateReps)
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        var data = res.body.data
+                        testUtils.checkResponse(res.body, true, 'LiftSet updated')
+                        expect(data.id).to.equal(liftSetID)
+                        expect(data.workoutliftid).to.equal(workoutLiftID)
+                        expect(data.weight).to.equal(updateWeight)
+                        expect(data.reps).to.equal(updateReps)
+                    }
                     done()
                 })
         })
@@ -94,20 +120,27 @@ describe('Lift_set API', () => {
 
     describe('Delete One - Not Found', () => {
         it('should return a not deleted message', (done) => {
-            testUtils.del(url, {id: notFoundLift_setID})
+            testUtils.del(url, { id: notFoundLiftSetID })
                 .end((err, res) => {
-                    testUtils.checkResponse(res.body, false, `Lift_set ${notFoundLift_setID} not deleted`)
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        testUtils.checkResponse(res.body, false, `LiftSet ${notFoundLiftSetID} not deleted`)
+                    }
                     done()
                 })
         })
     })
 
     describe('Delete One By ID', () => {
-        it('should delete one lift_set', (done) => {
-            testUtils.del(url, {id: lift_setID})
+        it('should delete one liftSet', (done) => {
+            testUtils.del(url, { id: liftSetID })
                 .end((err, res) => {
-                    var data = res.body.data
-                    testUtils.checkResponse(res.body, true, `Lift_set ${lift_setID} deleted`)
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        testUtils.checkResponse(res.body, true, `LiftSet ${liftSetID} deleted`)
+                    }
                     done()
                 })
         })

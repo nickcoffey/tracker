@@ -2,38 +2,40 @@ const express = require('express')
 const router = express.Router()
 const dbUtils = require('../util/dbUtils')
 
-// Create a lift_set
+var table = 'liftSet'
+
+// Create a liftSet
 router.post('', (req, res) => {
     var body = req.body
-    var fields = ['workout_lift_id', 'weight', 'reps']
-    var values = [body.workout_lift_id, body.weight, body.reps]
-    dbUtils.insert(res, 'lift_set', fields, values, ['*'], 'Lift_set saved', 'Lift_set not saved')
+    var fields = ['workoutLiftID', 'weight', 'reps']
+    var values = [body.workoutLiftID, body.weight, body.reps]
+    dbUtils.insert(res, table, fields, values, ['*'], 'LiftSet saved', 'LiftSet not saved')
 })
 
-// Get all lift_sets
+// Get all liftSets
 router.get('/all', (req, res) => {
-    dbUtils.selectAll(res, 'lift_set', ['*'], 'Lift_sets found', 'Lift_sets not found')
+    dbUtils.selectAll(res, table, ['*'], 'LiftSets found', 'LiftSets not found')
 })
 
-// Get a lift_set by id
+// Get a liftSet by id
 router.get('', (req, res) => {
     var id = req.body.id
-    dbUtils.selectByID(res, 'lift_set', ['*'], id, 'Lift_set found', `Lift_set ${id} not found`)
+    dbUtils.selectByID(res, table, ['*'], id, 'LiftSet found', `LiftSet ${id} not found`)
 })
 
-// Update a lift_set by id
+// Update a liftSet by id
 router.put('', (req, res) => {
     var body = req.body
-    var setFields = ['workout_lift_id', 'weight', 'reps']
-    var setValues = [body.workout_lift_id, body.weight, body.reps]
+    var setFields = ['workoutLiftID', 'weight', 'reps']
+    var setValues = [body.workoutLiftID, body.weight, body.reps]
     var id = body.id
-    dbUtils.updateOneByID(res, 'lift_set', setFields, setValues, id, ['*'], 'Lift_set updated', `Lift_set ${id} not updated`)
+    dbUtils.updateOneByID(res, table, setFields, setValues, id, ['*'], 'LiftSet updated', `LiftSet ${id} not updated`)
 })
 
-// Delete a lift_set by id
+// Delete a liftSet by id
 router.delete('', (req, res) => {
     var id = req.body.id
-    dbUtils.deleteOneByID(res, 'lift_set', req.body.id, `Lift_set ${id} deleted`, `Lift_set ${id} not deleted`)
+    dbUtils.deleteOneByID(res, table, req.body.id, `LiftSet ${id} deleted`, `LiftSet ${id} not deleted`)
 })
 
 module.exports = router

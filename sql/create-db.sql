@@ -7,7 +7,7 @@ CREATE TABLE Category (
 
 CREATE TABLE Lift (
   id SERIAL,
-  category_id SERIAL REFERENCES Category(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  categoryID SERIAL REFERENCES Category(id) ON DELETE CASCADE ON UPDATE CASCADE,
   name VARCHAR(300),
   description VARCHAR(1100),
   PRIMARY KEY (id)
@@ -15,22 +15,22 @@ CREATE TABLE Lift (
 -------------------------------------------------------
 CREATE TABLE Workout (
   id SERIAL,
-  start_time TIMESTAMP,
-  end_time TIMESTAMP,
+  startTime TIMESTAMP,
+  endTime TIMESTAMP,
   PRIMARY KEY (id)
 );
 
-CREATE TABLE Workout_Lift (
+CREATE TABLE WorkoutLift (
   id SERIAL,
-  workout_id SERIAL REFERENCES Workout(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  workoutID SERIAL REFERENCES Workout(id) ON DELETE CASCADE ON UPDATE CASCADE,
   name VARCHAR(300),
   description VARCHAR(1100),
   PRIMARY KEY (id)
 );
 
-CREATE TABLE Lift_Set (
+CREATE TABLE LiftSet (
   id SERIAL,
-  workout_lift_id SERIAL REFERENCES Workout_Lift(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  workoutLiftID SERIAL REFERENCES WorkoutLift(id) ON DELETE CASCADE ON UPDATE CASCADE,
   weight DOUBLE PRECISION,
   reps INT,
   PRIMARY KEY (id)

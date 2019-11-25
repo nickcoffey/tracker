@@ -1,5 +1,7 @@
 var expect = require('chai').expect
 var testUtils = require('./testUtils')
+var describe = testUtils.describe
+var it = testUtils.it
 
 describe('Category API', () => {
     var url = '/api/category'
@@ -12,14 +14,18 @@ describe('Category API', () => {
 
     describe('Create', () => {
         it('should create a new category', (done) => {
-            testUtils.post(url, {name: name, description: description})
+            testUtils.post(url, { name: name, description: description })
                 .end((err, res) => {
-                    var data = res.body.data
-                    testUtils.checkResponse(res.body, true, 'Category saved')
-                    expect(data.id).to.be.a('number')
-                    expect(data.name).to.equal(name)
-                    expect(data.description).to.equal(description)
-                    catID = data.id
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        var data = res.body.data
+                        testUtils.checkResponse(res.body, true, 'Category saved')
+                        expect(data.id).to.be.a('number')
+                        expect(data.name).to.equal(name)
+                        expect(data.description).to.equal(description)
+                        catID = data.id
+                    }
                     done()
                 })
         })
@@ -29,11 +35,15 @@ describe('Category API', () => {
         it('should return all categories', (done) => {
             testUtils.get(`${url}/all`, {})
                 .end((err, res) => {
-                    var data = res.body.data[0]
-                    testUtils.checkResponse(res.body, true, 'Categories found')
-                    expect(data.id).to.be.a('number')
-                    expect(data.name).to.be.a('string')
-                    expect(data.description).to.be.a('string')
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        var data = res.body.data[0]
+                        testUtils.checkResponse(res.body, true, 'Categories found')
+                        expect(data.id).to.be.a('number')
+                        expect(data.name).to.be.a('string')
+                        expect(data.description).to.be.a('string')
+                    }
                     done()
                 })
         })
@@ -41,9 +51,13 @@ describe('Category API', () => {
 
     describe('Get One By ID - Not Found', () => {
         it('should return a not found message', (done) => {
-            testUtils.get(url, {id: notFoundCatID})
+            testUtils.get(url, { id: notFoundCatID })
                 .end((err, res) => {
-                    testUtils.checkResponse(res.body, false, `Category ${notFoundCatID} not found`)
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        testUtils.checkResponse(res.body, false, `Category ${notFoundCatID} not found`)
+                    }
                     done()
                 })
         })
@@ -51,13 +65,17 @@ describe('Category API', () => {
 
     describe('Get One By ID', () => {
         it('should return the correct category', (done) => {
-            testUtils.get(url, {id: catID})
+            testUtils.get(url, { id: catID })
                 .end((err, res) => {
-                    var data = res.body.data
-                    testUtils.checkResponse(res.body, true, 'Category found')
-                    expect(data.id).to.equal(catID)
-                    expect(data.name).to.equal(name)
-                    expect(data.description).to.equal(description)
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        var data = res.body.data
+                        testUtils.checkResponse(res.body, true, 'Category found')
+                        expect(data.id).to.equal(catID)
+                        expect(data.name).to.equal(name)
+                        expect(data.description).to.equal(description)
+                    }
                     done()
                 })
         })
@@ -65,9 +83,13 @@ describe('Category API', () => {
 
     describe('Update One - Not Found', () => {
         it('should return a not updated message', (done) => {
-            testUtils.put(url, {id: notFoundCatID, name: updateName, description: updateDesc})
+            testUtils.put(url, { id: notFoundCatID, name: updateName, description: updateDesc })
                 .end((err, res) => {
-                    testUtils.checkResponse(res.body, false, `Category ${notFoundCatID} not updated`)
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        testUtils.checkResponse(res.body, false, `Category ${notFoundCatID} not updated`)
+                    }
                     done()
                 })
         })
@@ -75,13 +97,17 @@ describe('Category API', () => {
 
     describe('Update One By ID', () => {
         it('should update one category', (done) => {
-            testUtils.put(url, {id: catID, name: updateName, description: updateDesc})
+            testUtils.put(url, { id: catID, name: updateName, description: updateDesc })
                 .end((err, res) => {
-                    var data = res.body.data
-                    testUtils.checkResponse(res.body, true, 'Category updated')
-                    expect(data.id).to.equal(catID)
-                    expect(data.name).to.equal(updateName)
-                    expect(data.description).to.equal(updateDesc)
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        var data = res.body.data
+                        testUtils.checkResponse(res.body, true, 'Category updated')
+                        expect(data.id).to.equal(catID)
+                        expect(data.name).to.equal(updateName)
+                        expect(data.description).to.equal(updateDesc)
+                    }
                     done()
                 })
         })
@@ -89,9 +115,13 @@ describe('Category API', () => {
 
     describe('Delete One - Not Found', () => {
         it('should return a not deleted message', (done) => {
-            testUtils.del(url, {id: notFoundCatID})
+            testUtils.del(url, { id: notFoundCatID })
                 .end((err, res) => {
-                    testUtils.checkResponse(res.body, false, `Category ${notFoundCatID} not deleted`)
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        testUtils.checkResponse(res.body, false, `Category ${notFoundCatID} not deleted`)
+                    }
                     done()
                 })
         })
@@ -99,10 +129,13 @@ describe('Category API', () => {
 
     describe('Delete One By ID', () => {
         it('should delete one category', (done) => {
-            testUtils.del(url, {id: catID})
+            testUtils.del(url, { id: catID })
                 .end((err, res) => {
-                    var data = res.body.data
-                    testUtils.checkResponse(res.body, true, `Category ${catID} deleted`)
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        testUtils.checkResponse(res.body, true, `Category ${catID} deleted`)
+                    }
                     done()
                 })
         })

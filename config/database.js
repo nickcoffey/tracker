@@ -1,7 +1,7 @@
-module.exports.pg_local = {
+module.exports.pgLocal = {
     host: 'localhost',
     user: 'postgres',
-    password: process.env.PG_PW,
+    password: process.env.postgresPW,
     port: '5432',
     database: 'tracker'
 }
