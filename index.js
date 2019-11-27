@@ -1,7 +1,7 @@
 // App setup
 const express = require('express')
 const app = express()
-var port = 3000
+var port = 2000
 const config = require('./config/database')
 
 // CORS Setup
