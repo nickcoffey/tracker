@@ -11,28 +11,23 @@ class Categories extends Component {
 
     render() {
         const categories = this.props.categories.map(category => (
-            <tr key={category.id}>
-                <td>{category.id}</td>
-                <td>{category.name}</td>
-                <td>{category.description}</td>
-            </tr>
+            <option key={category.id}>
+                {category.name}
+            </option>
         ))
         return (
             <div>
                 <h1>Categories</h1>
+                <form onSubmit={this.onSubmit}>
+                    <div className='form-group'>
+                        <label htmlFor='categoryInput'>Select A Category: </label>
+                        <select className='form-control' id='categoryInput' name='category'>
+                            {categories}
+                        </select>
+                    </div>
+                    <button type='submit' className='btn btn-primary'>Submit</button>
+                </form>
                 <hr />
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {categories}
-                    </tbody>
-                </table>
                 <CategoryForm />
             </div>
         )

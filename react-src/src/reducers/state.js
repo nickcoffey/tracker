@@ -1,4 +1,5 @@
 export const initialState = {
-    categories: [],
-    category: {}
+    message: '',
+    success: false,
+    categories: []
 }
