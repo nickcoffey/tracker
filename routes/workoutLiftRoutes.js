@@ -14,13 +14,13 @@ router.post('', (req, res) => {
 
 // Get all workoutLifts
 router.get('/all', (req, res) => {
-    dbUtils.selectAll(res, table, ['*'], 'WorkoutLifts found', 'WorkoutLifts not found')
+    dbUtils.selectAllWhere(res, table, ['*'], [], [], 'WorkoutLifts found', 'WorkoutLifts not found')
 })
 
 // Get a workoutLift by id
 router.get('', (req, res) => {
     var id = req.body.id
-    dbUtils.selectByID(res, table, ['*'], id, 'WorkoutLift found', `WorkoutLift ${id} not found`)
+    dbUtils.selectWhere(res, table, ['*'], ['id'], [id], 'WorkoutLift found', `WorkoutLift ${id} not found`)
 })
 
 // Update a workoutLift by id

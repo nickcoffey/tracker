@@ -6,6 +6,20 @@ var it = testUtils.it
 describe('DB Utils', () => {
     const dbUtils = require('../util/dbUtils')
 
+    describe('formatWhereText', () => {
+        it('should return 2 field and 2 value in text', () => {
+            var output = dbUtils.formatWhereText(['id', 'name', 'description'])
+            expect(output).to.be.equal('id=$1 AND name=$2 AND description=$3')
+        })
+    })
+
+    describe('formatCommaSeparatedText', () => {
+        it('should return 3 field and 3 value in text', () => {
+            var output = dbUtils.formatCommaSeparatedText(['id', 'name', 'description'])
+            expect(output).to.be.equal('id,name,description')
+        })
+    })
+
     describe('formatInsertQuery', () => {
         it('should return 1 field and 1 value in query', () => {
             var output = dbUtils.formatInsertQuery('category', ['name'], ['*'])
@@ -17,15 +31,15 @@ describe('DB Utils', () => {
         })
     })
 
-    describe('formatSelectAllQuery', () => {
+    describe('formatSelectAllWhereQuery', () => {
         it('should return a query with 1 column parameter', () => {
-            var output = dbUtils.formatSelectAllQuery('category', ['*'])
+            var output = dbUtils.formatSelectAllWhereQuery('category', ['*'], [])
             expect(output).to.be.equal('SELECT * FROM category')
         })
 
         it('should return a query with multiple column parameters', () => {
-            var output = dbUtils.formatSelectAllQuery('category', ['id', 'name', 'description'])
-            expect(output).to.be.equal('SELECT id,name,description FROM category')
+            var output = dbUtils.formatSelectAllWhereQuery('category', ['id', 'name', 'description'], ['name', 'description'])
+            expect(output).to.be.equal('SELECT id,name,description FROM category WHERE name=$1 AND description=$2')
         })
     })
 

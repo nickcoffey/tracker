@@ -14,13 +14,13 @@ router.post('', (req, res) => {
 
 // Get all categories
 router.get('/all', (req, res) => {
-    dbUtils.selectAll(res, table, ['*'], 'Categories found', 'Categories not found')
+    dbUtils.selectAllWhere(res, table, ['*'], [], [], 'Categories found', 'Categories not found')
 })
 
 // Get a category by id
 router.get('', (req, res) => {
     var id = req.body.id
-    dbUtils.selectByID(res, table, ['*'], id, 'Category found', `Category ${id} not found`)
+    dbUtils.selectWhere(res, table, ['*'], ['id'], [id], 'Category found', `Category ${id} not found`)
 })
 
 // Update a category by id

@@ -15,7 +15,7 @@ router.post('', (req, res) => {
 
 // Get all workouts
 router.get('/all', (req, res) => {
-    dbUtils.selectAll(res, table, selectReturnFields, 'Workouts found', 'Workouts not found')
+    dbUtils.selectAllWhere(res, table, selectReturnFields, [], [], 'Workouts found', 'Workouts not found')
 })
 
 // Get a workout by id

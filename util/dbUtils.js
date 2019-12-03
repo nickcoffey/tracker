@@ -28,21 +28,32 @@ function runQuery (text, values, res, passMsg, failMsg, isSelectOrUpdateAll, isD
     })
 }
 
+module.exports.formatCommaSeparatedText = function formatCommaSeparatedText (fields) {
+    var selectText = ''
+    fields.forEach(field => {
+        selectText += `${field},`
+    })
+    selectText = selectText.slice(0, -1)
+    return selectText
+}
+
+module.exports.formatWhereText = function formatWhereText (fields) {
+    var whereText = ''
+    fields.forEach((field, index) => {
+        whereText += `${field}=$${index + 1} AND `
+    })
+    whereText = whereText.slice(0, -5)
+    return whereText
+}
+
 module.exports.formatInsertQuery = function formatInsertQuery (table, fields, returnFields) {
-    var fieldText = ''
+    var fieldText = this.formatCommaSeparatedText(fields)
     var valuesText = ''
     fields.forEach((field, index) => {
-        index += 1
-        fieldText += `${field},`
-        valuesText += `$${index},`
+        valuesText += `$${index + 1},`
     })
-    fieldText = fieldText.slice(0, -1)
     valuesText = valuesText.slice(0, -1)
-    var returnText = ''
-    returnFields.forEach(field => {
-        returnText += `${field},`
-    })
-    returnText = returnText.slice(0, -1)
+    var returnText = this.formatCommaSeparatedText(returnFields)
     return `INSERT INTO ${table}(${fieldText}) VALUES(${valuesText}) RETURNING ${returnText}`
 }
 module.exports.insert = function insert (res, table, fields, values, returnFields, passMsg, failMsg) {
@@ -50,39 +61,28 @@ module.exports.insert = function insert (res, table, fields, values, returnField
     runQuery(text, values, res, passMsg, failMsg, false, false)
 }
 
-module.exports.formatSelectAllQuery = function formatSelectAllQuery (table, fields) {
-    var fieldText = ''
-    fields.forEach(field => {
-        fieldText += `${field},`
-    })
-    fieldText = fieldText.slice(0, -1)
-    return `SELECT ${fieldText} FROM ${table}`
+module.exports.formatSelectAllWhereQuery = function formatSelectAllWhereQuery (table, selectFields, whereFields) {
+    var selectText = this.formatCommaSeparatedText(selectFields)
+    var whereText = this.formatWhereText(whereFields)
+    var query = `SELECT ${selectText} FROM ${table}`
+    if (whereFields.length > 0) {
+        query += ` WHERE ${whereText}`
+    }
+    return query
 }
-module.exports.selectAll = function selectAll (res, table, fields, passMsg, failMsg) {
-    var text = this.formatSelectAllQuery(table, fields)
-    runQuery(text, [], res, passMsg, failMsg, true, false)
+module.exports.selectAllWhere = function selectAllWhere (res, table, selectFields, whereFields, whereValues, passMsg, failMsg) {
+    var text = this.formatSelectAllWhereQuery(table, selectFields, whereFields)
+    runQuery(text, whereValues, res, passMsg, failMsg, true, false)
 }
 
 module.exports.formatSelectWhereQuery = function formatSelectWhereQuery (table, selectFields, whereFields) {
-    var selectText = ''
-    selectFields.forEach(field => {
-        selectText += `${field},`
-    })
-    selectText = selectText.slice(0, -1)
-    var whereText = ''
-    whereFields.forEach((field, index) => {
-        whereText += `${field}=$${index + 1} AND `
-    })
-    whereText = whereText.slice(0, -5)
+    var selectText = this.formatCommaSeparatedText(selectFields)
+    var whereText = this.formatWhereText(whereFields)
     return `SELECT ${selectText} FROM ${table} WHERE ${whereText}`
 }
 module.exports.selectWhere = function selectWhere (res, table, selectFields, whereFields, values, passMsg, failMsg) {
     var text = this.formatSelectWhereQuery(table, selectFields, whereFields)
     runQuery(text, values, res, passMsg, failMsg, false, false)
-}
-module.exports.selectByID = function selectByID (res, table, selectFields, whereID, passMsg, failMsg) {
-    var text = this.formatSelectWhereQuery(table, selectFields, ['id'])
-    runQuery(text, [whereID], res, passMsg, failMsg, false, false)
 }
 
 module.exports.formatUpdateWhereQuery = function formatUpdateWhereQuery (table, setFields, whereFields, returnFields) {
@@ -99,11 +99,7 @@ module.exports.formatUpdateWhereQuery = function formatUpdateWhereQuery (table, 
         whereText += `${field}=$${index} AND `
     })
     whereText = whereText.slice(0, -5)
-    var returnText = ''
-    returnFields.forEach(field => {
-        returnText += `${field},`
-    })
-    returnText = returnText.slice(0, -1)
+    var returnText = this.formatCommaSeparatedText(returnFields)
     return `UPDATE ${table} SET ${setText} WHERE ${whereText} RETURNING ${returnText}`
 }
 module.exports.updateAllWhere = function updateAllWhere (res, table, setFields, setValues, whereFields, whereValues, returnFields, passMsg, failMsg) {
@@ -118,11 +114,7 @@ module.exports.updateOneByID = function updateOneByID (res, table, setFields, se
 }
 
 module.exports.formatDeleteWhereQuery = function formatDeleteWhereQuery (table, whereFields) {
-    var whereText = ''
-    whereFields.forEach((field, index) => {
-        whereText += `${field}=$${index + 1} AND `
-    })
-    whereText = whereText.slice(0, -5)
+    var whereText = this.formatWhereText(whereFields)
     return `DELETE FROM ${table} WHERE ${whereText}`
 }
 module.exports.deleteAllWhere = function deleteAllWhere (res, table, whereFields, whereValues, passMsg, failMsg) {
