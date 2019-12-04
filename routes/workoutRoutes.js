@@ -8,8 +8,8 @@ var table = 'workout'
 // Create a workout
 router.post('', (req, res) => {
     var body = req.body
-    var fields = ['startTime', 'endTime']
-    var values = [body.startTime, body.endTime]
+    var fields = ['starttime', 'endtime']
+    var values = [body.starttime, body.endtime]
     dbUtils.insert(res, table, fields, values, selectReturnFields, 'Workout saved', 'Workout not saved')
 })
 
@@ -19,16 +19,16 @@ router.get('/all', (req, res) => {
 })
 
 // Get a workout by id
-router.get('', (req, res) => {
-    var id = req.body.id
+router.get('/:id', (req, res) => {
+    var id = req.params.id
     dbUtils.selectWhere(res, table, selectReturnFields, ['id'], [id], 'Workout found', `Workout ${id} not found`)
 })
 
 // Update a workout by id
 router.put('', (req, res) => {
     var body = req.body
-    var setFields = ['startTime', 'endTime']
-    var setValues = [body.startTime, body.endTime]
+    var setFields = ['starttime', 'endtime']
+    var setValues = [body.starttime, body.endtime]
     var id = body.id
     dbUtils.updateOneByID(res, table, setFields, setValues, id, selectReturnFields, 'Workout updated', `Workout ${id} not updated`)
 })

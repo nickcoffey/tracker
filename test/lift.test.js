@@ -8,6 +8,7 @@ describe('Lift API', () => {
     var liftID = 0
     var notFoundLiftID = 0
     var categoryID = 1
+    var notFoundCategoryID = 0
     var name = 'test'
     var description = 'qwerty'
     var updateName = 'updatedName'
@@ -79,6 +80,39 @@ describe('Lift API', () => {
                         expect(data.categoryid).to.equal(categoryID)
                         expect(data.name).to.equal(name)
                         expect(data.description).to.equal(description)
+                    }
+                    done()
+                })
+        })
+    })
+
+    describe('Get All By Category ID - Not Found', () => {
+        it('should return a not found message', (done) => {
+            testUtils.get(`${url}/all/${notFoundCategoryID}`, {})
+                .end((err, res) => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        testUtils.checkResponse(res.body, false, `Lifts with categoryID ${notFoundCategoryID} not found`)
+                    }
+                    done()
+                })
+        })
+    })
+
+    describe('Get All By Category ID', () => {
+        it('should return the correct lifts', (done) => {
+            testUtils.get(`${url}/all/${categoryID}`, {})
+                .end((err, res) => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        var data = res.body.data[0]
+                        testUtils.checkResponse(res.body, true, 'Lifts found')
+                        expect(data.id).to.be.a('number')
+                        expect(data.categoryid).to.equal(categoryID)
+                        expect(data.name).to.be.a('string')
+                        expect(data.description).to.be.a('string')
                     }
                     done()
                 })

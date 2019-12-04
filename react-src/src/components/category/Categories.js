@@ -1,18 +1,31 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { getAllCategories } from '../../actions/categoryActions'
-import CategoryForm from './CategoryForm'
+import axios from 'axios'
+import NewCategory from './NewCategory'
 
-class Categories extends Component {
+export default class Categories extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            categories: []
+        }
+        this.getAllCategories = this.getAllCategories.bind(this)
+    }
+
     componentDidMount() {
-        this.props.getAllCategories()
+        this.getAllCategories()
+    }
+
+    getAllCategories() {
+        axios.get('http://localhost:2000/api/category/all')
+            .then(res => {
+                this.setState({categories: res.data.data})
+            })
     }
 
     render() {
-        const categories = this.props.categories.map(category => (
+        const categories = this.state.categories.map(category => (
             <option key={category.id}>
-                {category.name}
+                {`${category.name} - ${category.description}`}
             </option>
         ))
         return (
@@ -28,19 +41,8 @@ class Categories extends Component {
                     <button type='submit' className='btn btn-primary'>Submit</button>
                 </form>
                 <hr />
-                <CategoryForm />
+                <NewCategory getAllCategories={this.getAllCategories} />
             </div>
         )
     }
 }
-
-Categories.propTypes = {
-    getAllCategories: PropTypes.func.isRequired,
-    categories: PropTypes.array.isRequired
-}
-
-const mapStateToProps = state => ({
-    categories: state.categoryReducer.categories
-})
-
-export default connect(mapStateToProps, { getAllCategories })(Categories)

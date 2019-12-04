@@ -1,15 +1,14 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { createACategory } from '../../actions/categoryActions'
 
-class CategoryForm extends Component {
+export default class CategoryForm extends Component {
     constructor(props) {
         super(props)
         this.state = {
             name: '',
             description: ''
         }
+        this.clearFields = this.clearFields.bind(this)
         this.onChange = this.onChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
     }
@@ -20,18 +19,24 @@ class CategoryForm extends Component {
 
     onSubmit(event) {
         event.preventDefault()
-        const categoryData = {
-            name: this.state.name,
-            description: this.state.description
-        }
-        this.props.createACategory(categoryData)
+        this.props.sendCategoryRequest(this.state)
+            .then(res => {
+                const response = res.data
+                console.log(response.message)
+                if(response.success) {
+                    this.clearFields()
+                    this.props.getAllCategories()
+                } 
+            })
+    }
+
+    clearFields() {
+        this.setState({name: '', description: ''})
     }
 
     render() {
         return (
             <div>
-                <button type='button' className='btn btn-primary' data-toggle='modal' data-target='#categoryModal'>New Category</button>
-
                 <div className='modal fade' id='categoryModal' tabIndex='-1' role='dialog' aria-labelledby='categoryModalLabel' aria-hidden='true'>
                     <div className='modal-dialog' role='document'>
                         <div className='modal-content'>
@@ -54,6 +59,7 @@ class CategoryForm extends Component {
                             </div>
                             <div className='modal-footer'>
                                 <button type='button' className='btn btn-secondary' data-dismiss='modal'>Close</button>
+                                <button className='btn btn-warning' onClick={this.clearFields}>Clear</button>
                                 <button type='submit' className='btn btn-primary'>Submit</button>
                             </div>
                         </form>
@@ -66,7 +72,6 @@ class CategoryForm extends Component {
 }
 
 CategoryForm.propTypes = {
-    createACategory: PropTypes.func.isRequired
+    sendCategoryRequest: PropTypes.func.isRequired,
+    getAllCategories: PropTypes.func.isRequired
 }
-
-export default connect(null, { createACategory })(CategoryForm)

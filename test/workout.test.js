@@ -18,7 +18,7 @@ describe('Workout API', () => {
 
     describe('Create', () => {
         it('should create a new workout', (done) => {
-            testUtils.post(url, { startTime: startTime, endTime: endTime })
+            testUtils.post(url, { starttime: startTime, endtime: endTime })
                 .end((err, res) => {
                     if (err) {
                         console.log(err)
@@ -55,7 +55,7 @@ describe('Workout API', () => {
 
     describe('Get One By ID - Not Found', () => {
         it('should return a not found message', (done) => {
-            testUtils.get(url, { id: notFoundWorkoutID })
+            testUtils.get(`${url}/${notFoundWorkoutID}`)
                 .end((err, res) => {
                     if (err) {
                         console.log(err)
@@ -69,7 +69,7 @@ describe('Workout API', () => {
 
     describe('Get One By ID', () => {
         it('should return the correct workout', (done) => {
-            testUtils.get(url, { id: workoutID })
+            testUtils.get(`${url}/${workoutID}`)
                 .end((err, res) => {
                     if (err) {
                         console.log(err)
@@ -101,7 +101,7 @@ describe('Workout API', () => {
 
     describe('Update One By ID', () => {
         it('should update one workout', (done) => {
-            testUtils.put(url, { id: workoutID, startTime: updatedStartTime, endTime: updatedEndTime })
+            testUtils.put(url, { id: workoutID, starttime: updatedStartTime, endtime: updatedEndTime })
                 .end((err, res) => {
                     if (err) {
                         console.log(err)
