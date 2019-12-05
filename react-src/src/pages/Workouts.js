@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from'react-router-dom'
 import axios from 'axios'
-import WorkoutTable from '../components/workout/WorkoutTable'
+import Table from '../components/common/Table'
 
 export default class Workouts extends Component {
     constructor(props) {
@@ -43,7 +43,8 @@ export default class Workouts extends Component {
     }
 
     render() {
-        const workouts = this.state.workouts.map(workout => (
+        const headerColumns = ['ID', 'Start Time', 'End Time']
+        const bodyRows = this.state.workouts.map(workout => (
             <tr onClick={() => this.openWorkout(workout.id)} key={workout.id}>
                 <td>{workout.id}</td>
                 <td>{workout.starttime}</td>
@@ -55,8 +56,8 @@ export default class Workouts extends Component {
             <div>
                 <h1>Workouts</h1>
                 <hr />
-                <WorkoutTable workouts={workouts} />
                 <Link to='/newWorkout'><button type='button' className='btn btn-primary btn-lg'>New Workout</button></Link>
+                <Table headerColumns={headerColumns} bodyRows={bodyRows} />
             </div>
         )
     }

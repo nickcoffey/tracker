@@ -1,25 +1,28 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-export default function WorkoutTable(props) {
+export default function Table(props) {
+    const columns = props.headerColumns.map(((column, index) =>
+        <td key={index}>{column}</td>
+    ))
+
     return (
         <div>
             <table className='table table-hover'>
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
+                        {columns}
                     </tr>
                 </thead>
                 <tbody>
-                    {props.workouts}
+                    {props.bodyRows}
                 </tbody>
             </table>
         </div>
     )
 }
 
-WorkoutTable.propTypes = {
-    workouts: PropTypes.any.isRequired
+Table.propTypes = {
+    headerColumns: PropTypes.any.isRequired,
+    bodyRows: PropTypes.any.isRequired
 }

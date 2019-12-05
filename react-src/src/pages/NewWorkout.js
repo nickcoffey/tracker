@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import WorkoutTable from '../components/workout/WorkoutTable'
 import WorkoutForm from '../components/workout/WorkoutForm'
-import WorkoutLiftTable from '../components/workoutlift/WorkoutLiftTable'
+import Table from '../components/common/Table'
+import getAllByID from '../api/APIUtils'
 
 export default class NewWorkout extends Component {
     constructor(props) {
@@ -10,9 +10,11 @@ export default class NewWorkout extends Component {
         this.state = {
             id: 0,
             starttime: null,
-            endtime: null
+            endtime: null,
+            workoutLifts: []
         }
         this.startWorkout = this.startWorkout.bind(this)
+        this.getWorkoutLifts = this.getWorkoutLifts.bind(this)
         this.getCurrentDateString = this.getCurrentDateString.bind(this)
         this.convertToFull = this.convertToFull.bind(this)
     }
@@ -48,6 +50,17 @@ export default class NewWorkout extends Component {
                     endtime: json.data.endtime
                 })
             })
+        this.getWorkoutLifts()
+    }
+
+    getWorkoutLifts() {
+        getAllByID('workoutLift', this.props.match.params.id)
+            .then(res => {
+                var json = res.data
+                if(json.success === true) {
+                    this.setState({workoutLifts: json.data})
+                }
+            })
     }
     
     render() {
@@ -58,14 +71,21 @@ export default class NewWorkout extends Component {
                 <td>{this.state.endtime}</td>
             </tr>
         )
+        const workoutLifts = this.state.workoutLifts.map(workoutLift => (
+            <tr key={workoutLift.id}>
+                <td>{workoutLift.id}</td>
+                <td>{workoutLift.name}</td>
+                <td>{workoutLift.description}</td>
+            </tr>
+        ))
 
         return (
             <div>
                 <h1>New Workout</h1>
                 <button type='button' className='btn btn-primary btn-lg' onClick={this.startWorkout}>Start Workout</button>
-                <WorkoutTable workouts={workout} />
+                <Table headerColumns={['ID', 'Start Time', 'End Time']} bodyRows={workout} />
                 <h3>Lifts</h3>
-                <WorkoutLiftTable workoutID={this.state.id} />
+                <Table headerColumns={['ID', 'Name', 'Description']} bodyRows={workoutLifts} />
                 {/* <WorkoutForm /> */}
             </div>
         )

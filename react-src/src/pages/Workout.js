@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import WorkoutTable from '../components/workout/WorkoutTable'
 import AddWorkoutLift from '../components/workoutlift/AddWorkoutLift'
-import WorkoutLiftTable from '../components/workoutlift/WorkoutLiftTable'
+import Table from '../components/common/Table'
+import getAllByID from '../api/APIUtils'
 
 export default class Workout extends Component {
     constructor(props) {
@@ -10,9 +10,11 @@ export default class Workout extends Component {
         this.state = {
             id: null,
             starttime: null,
-            endtime: null
+            endtime: null,
+            workoutLifts: []
         }
         this.getWorkout = this.getWorkout.bind(this)
+        this.getWorkoutLifts = this.getWorkoutLifts.bind(this)
     }
 
     getWorkout() {
@@ -25,8 +27,19 @@ export default class Workout extends Component {
             })
     }
 
+    getWorkoutLifts() {
+        getAllByID('workoutLift', this.props.match.params.id)
+            .then(res => {
+                var json = res.data
+                if(json.success === true) {
+                    this.setState({workoutLifts: json.data})
+                }
+            })
+    }
+
     componentDidMount() {
         this.getWorkout()
+        this.getWorkoutLifts()
     }
 
     render() {
@@ -37,13 +50,20 @@ export default class Workout extends Component {
                 <td>{this.state.endtime}</td>
             </tr>
         )
+        const workoutLifts = this.state.workoutLifts.map(workoutLift => (
+            <tr key={workoutLift.id}>
+                <td>{workoutLift.id}</td>
+                <td>{workoutLift.name}</td>
+                <td>{workoutLift.description}</td>
+            </tr>
+        ))
 
         return (
             <div>
                 <h1>Workout </h1>
-                <WorkoutTable workouts={workout} />
+                <Table headerColumns={['ID', 'Start Time', 'End Time']} bodyRows={workout} />
                 <h3>Lifts</h3>
-                <WorkoutLiftTable workoutID={this.props.match.params.id} />
+                <Table headerColumns={['ID', 'Name', 'Description']} bodyRows={workoutLifts} />
                 {/* <AddWorkoutLift /> */}
             </div>
         )
