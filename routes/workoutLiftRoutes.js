@@ -17,6 +17,12 @@ router.get('/all', (req, res) => {
     dbUtils.selectAllWhere(res, table, ['*'], [], [], 'WorkoutLifts found', 'WorkoutLifts not found')
 })
 
+// Get all workoutLifts by workoutID
+router.get('/all/:workoutID', (req, res) => {
+    var workoutID = req.params.workoutID
+    dbUtils.selectAllWhere(res, table, ['*'], ['workoutid'], [workoutID], `WorkoutLifts for workout ${workoutID} found`, `WorkoutLifts for workout ${workoutID} not found`)
+})
+
 // Get a workoutLift by id
 router.get('', (req, res) => {
     var id = req.body.id

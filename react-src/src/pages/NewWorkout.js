@@ -2,12 +2,13 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import WorkoutTable from '../components/workout/WorkoutTable'
 import WorkoutForm from '../components/workout/WorkoutForm'
+import WorkoutLiftTable from '../components/workoutlift/WorkoutLiftTable'
 
 export default class NewWorkout extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            id: null,
+            id: 0,
             starttime: null,
             endtime: null
         }
@@ -33,7 +34,6 @@ export default class NewWorkout extends Component {
     }
 
     startWorkout() {
-        console.log(this.getCurrentDateString())
         const newWorkout = {
             id: null,
             starttime:  this.getCurrentDateString(),
@@ -64,6 +64,8 @@ export default class NewWorkout extends Component {
                 <h1>New Workout</h1>
                 <button type='button' className='btn btn-primary btn-lg' onClick={this.startWorkout}>Start Workout</button>
                 <WorkoutTable workouts={workout} />
+                <h3>Lifts</h3>
+                <WorkoutLiftTable workoutID={this.state.id} />
                 {/* <WorkoutForm /> */}
             </div>
         )

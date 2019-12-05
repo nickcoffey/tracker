@@ -8,6 +8,7 @@ describe('WorkoutLift API', () => {
     var workoutLiftID = 0
     var notFoundWorkoutLiftID = 0
     var workoutID = 1
+    var notFoundWorkoutID = 0
     var name = 'test'
     var description = 'qwerty'
     var updateName = 'updatedName'
@@ -44,6 +45,39 @@ describe('WorkoutLift API', () => {
                         testUtils.checkResponse(res.body, true, 'WorkoutLifts found')
                         expect(data.id).to.be.a('number')
                         expect(data.workoutid).to.be.a('number')
+                        expect(data.name).to.be.a('string')
+                        expect(data.description).to.be.a('string')
+                    }
+                    done()
+                })
+        })
+    })
+
+    describe('Get All By WorkoutID - Not Found', () => {
+        it('should return a not found message', (done) => {
+            testUtils.get(`${url}/all/${notFoundWorkoutID}`, {})
+                .end((err, res) => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        testUtils.checkResponse(res.body, false, `WorkoutLifts for workout ${notFoundWorkoutLiftID} not found`)
+                    }
+                    done()
+                })
+        })
+    })
+
+    describe('Get All By WorkoutID', () => {
+        it('should return all workoutLifts', (done) => {
+            testUtils.get(`${url}/all/${workoutID}`, {})
+                .end((err, res) => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        var data = res.body.data[0]
+                        testUtils.checkResponse(res.body, true, `WorkoutLifts for workout ${workoutID} found`)
+                        expect(data.id).to.be.a('number')
+                        expect(data.workoutid).to.equal(workoutID)
                         expect(data.name).to.be.a('string')
                         expect(data.description).to.be.a('string')
                     }
