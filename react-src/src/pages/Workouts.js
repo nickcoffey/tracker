@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from'react-router-dom'
-import axios from 'axios'
+import { getAll } from '../api/APIUtils'
 import Table from '../components/common/Table'
 
 export default class Workouts extends Component {
@@ -19,8 +19,8 @@ export default class Workouts extends Component {
             starttime: 'None Found',
             endtime: 'None Found'
         }
-
-        axios.get('http://localhost:2000/api/workout/all')
+        
+        getAll('workout')
             .then(res => {
                 var json = res.data
                 if(json.success === true) {
@@ -28,9 +28,6 @@ export default class Workouts extends Component {
                 } else {
                     this.setState({workouts: [noneFound]})
                 }
-            })
-            .catch(err => {
-                this.setState({workouts: [noneFound]})
             })
     }
 

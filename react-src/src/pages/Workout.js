@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import axios from 'axios'
 import AddWorkoutLift from '../components/workoutlift/AddWorkoutLift'
 import Table from '../components/common/Table'
-import getAllByID from '../api/APIUtils'
+import { getAllByID, getOneByID } from '../api/APIUtils'
 
 export default class Workout extends Component {
     constructor(props) {
@@ -18,7 +17,7 @@ export default class Workout extends Component {
     }
 
     getWorkout() {
-        axios.get(`http://localhost:2000/api/workout/${this.props.match.params.id}`)
+        getOneByID('workout', this.props.match.params.id)
             .then(res => {
                 var json = res.data
                 if(json.success === true) {

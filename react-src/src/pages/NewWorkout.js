@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import axios from 'axios'
 import WorkoutForm from '../components/workout/WorkoutForm'
 import Table from '../components/common/Table'
-import getAllByID from '../api/APIUtils'
+import { getAllByID, createOne } from '../api/APIUtils'
 
 export default class NewWorkout extends Component {
     constructor(props) {
@@ -41,7 +40,7 @@ export default class NewWorkout extends Component {
             starttime:  this.getCurrentDateString(),
             endtime: null
         }
-        axios.post('http://localhost:2000/api/workout', newWorkout)
+        createOne('workout', newWorkout)
             .then(res => {
                 const json = res.data
                 this.setState({
