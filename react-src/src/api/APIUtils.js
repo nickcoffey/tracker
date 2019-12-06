@@ -44,3 +44,11 @@ export function createOne(table, body) {
                 })
                 .catch(err => { return {} })
 }
+
+export function updateOneByID(table, body) {
+        return axios.put(`${URL}/${table}`, body)
+                .then(res => {
+                        return returnValue(res.data, false)
+                })
+                .catch(err => { return {} })
+}
