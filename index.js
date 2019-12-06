@@ -1,12 +1,16 @@
 // App setup
 const express = require('express')
+const path = require('path')
 const app = express()
-var port = 2000
+var port = process.env.IS_HEROKU === 'true' ? process.env.PORT : 2000
 const config = require('./config/database')
 
 // CORS Setup
 const cors = require('cors')
 app.use(cors())
+
+// Serve ReactJS UI
+app.use(express.static(path.join(__dirname, './react-src/build')))
 
 // Body parser setup
 const bodyParser = require('body-parser')

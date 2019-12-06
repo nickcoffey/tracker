@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const URL = 'http://localhost:2000/api'
+const port = process.env.IS_HEROKU === 'true' ? process.env.PORT : 2000
+const URL = `http://localhost:${port}/api`
 
 export function returnValue(json, isArray) {
         var value = {}
