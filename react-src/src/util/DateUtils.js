@@ -1,4 +1,4 @@
-function convertToFull(text) {
+export function convertToFull(text) {
     if(text.length === 1) {
         text = `0${text}`
     }

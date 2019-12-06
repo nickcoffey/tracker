@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const URL = 'http://localhost:2000/api'
 
-function returnValue(json, isArray) {
+export function returnValue(json, isArray) {
         var value = {}
         if(isArray) {
                 value = []
