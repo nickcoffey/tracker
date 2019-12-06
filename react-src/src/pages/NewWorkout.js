@@ -8,12 +8,11 @@ export default class NewWorkout extends Component {
         super(props)
         this.state = {
             id: 0,
-            starttime: null,
-            endtime: null,
+            starttime: 'MM/DD/YYYY HH:MM AM',
+            endtime: 'MM/DD/YYYY HH:MM AM',
             workoutLifts: []
         }
         this.startWorkout = this.startWorkout.bind(this)
-        this.getWorkoutLifts = this.getWorkoutLifts.bind(this)
         this.getCurrentDateString = this.getCurrentDateString.bind(this)
         this.convertToFull = this.convertToFull.bind(this)
     }
@@ -36,30 +35,16 @@ export default class NewWorkout extends Component {
 
     startWorkout() {
         const newWorkout = {
-            id: null,
+            id: 0,
             starttime:  this.getCurrentDateString(),
             endtime: null
         }
-        createOne('workout', newWorkout)
-            .then(res => {
-                const json = res.data
-                this.setState({
-                    id: json.data.id,
-                    starttime: json.data.starttime,
-                    endtime: json.data.endtime
-                })
-            })
-        this.getWorkoutLifts()
-    }
-
-    getWorkoutLifts() {
-        getAllByID('workoutLift', this.props.match.params.id)
-            .then(res => {
-                var json = res.data
-                if(json.success === true) {
-                    this.setState({workoutLifts: json.data})
-                }
-            })
+        createOne('workout', newWorkout).then(workout => {
+            this.setState(workout)
+            if(workout.id !== undefined && workout.id !== 0) {
+                getAllByID('workoutLift', this.state.id).then(workoutLifts => this.setState({workoutLifts: workoutLifts}))
+            }
+        })
     }
     
     render() {

@@ -7,38 +7,17 @@ export default class Workout extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            id: null,
-            starttime: null,
-            endtime: null,
+            id: 'Not found',
+            starttime: 'Not found',
+            endtime: 'Not found',
             workoutLifts: []
         }
-        this.getWorkout = this.getWorkout.bind(this)
-        this.getWorkoutLifts = this.getWorkoutLifts.bind(this)
-    }
-
-    getWorkout() {
-        getOneByID('workout', this.props.match.params.id)
-            .then(res => {
-                var json = res.data
-                if(json.success === true) {
-                    this.setState(json.data)
-                }
-            })
-    }
-
-    getWorkoutLifts() {
-        getAllByID('workoutLift', this.props.match.params.id)
-            .then(res => {
-                var json = res.data
-                if(json.success === true) {
-                    this.setState({workoutLifts: json.data})
-                }
-            })
     }
 
     componentDidMount() {
-        this.getWorkout()
-        this.getWorkoutLifts()
+        const workoutID = this.props.match.params.id
+        getOneByID('workout', workoutID).then(workout => this.setState(workout))
+        getAllByID('workoutLift', workoutID).then(workoutLifts => this.setState({workoutLifts: workoutLifts}))
     }
 
     render() {

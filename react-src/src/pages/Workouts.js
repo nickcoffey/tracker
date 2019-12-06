@@ -7,28 +7,18 @@ export default class Workouts extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            workouts: []
+            workouts: [{
+                id: 'None Found',
+                starttime: 'None Found',
+                endtime: 'None Found'
+            }]
         }
         this.getAllWorkouts = this.getAllWorkouts.bind(this)
         this.openWorkout = this.openWorkout.bind(this)
     }
 
     getAllWorkouts() {
-        const noneFound = {
-            id: 'None Found',
-            starttime: 'None Found',
-            endtime: 'None Found'
-        }
-        
-        getAll('workout')
-            .then(res => {
-                var json = res.data
-                if(json.success === true) {
-                    this.setState({workouts: json.data})
-                } else {
-                    this.setState({workouts: [noneFound]})
-                }
-            })
+        getAll('workout').then(workouts => this.setState({workouts: workouts}))
     }
 
     openWorkout(id) {
