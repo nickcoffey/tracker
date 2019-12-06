@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import AddWorkoutLift from '../components/workoutlift/AddWorkoutLift'
+import Form from '../components/common/Form/Form'
 import Table from '../components/common/Table'
 import { getAllByID, getOneByID, createOne, updateOneByID } from '../api/APIUtils'
 
@@ -86,15 +86,6 @@ export default class Workout extends Component {
         } else if (this.state.isNew) {
             button = (<button type='button' className='btn btn-primary btn-lg' onClick={this.startWorkout}>Start Workout</button>)
         }
-        
-
-        const workout = (
-            <tr>
-                <td>{this.state.id}</td>
-                <td>{this.state.starttime}</td>
-                <td>{this.state.endtime}</td>
-            </tr>
-        )
 
         const workoutLifts = this.state.workoutLifts.map(workoutLift => (
             <tr key={workoutLift.id}>
@@ -104,14 +95,29 @@ export default class Workout extends Component {
             </tr>
         ))
 
+        // const input = {
+        //     id: 'name',
+        //     label: 'Name',
+        //     value: ''
+        // }
+
         return (
             <div>
                 <h1>{headerText}</h1>
                 {button}
-                <Table headerColumns={['ID', 'Start Time', 'End Time']} bodyRows={workout} />
+                <div className='container'>
+                    <div className='row'>
+                        <h3 className='col'>Start Time</h3>
+                        <h3 className='col'>End Time</h3>
+                    </div>
+                    <div className='row'>
+                        <div className='col'>{this.state.starttime}</div>
+                        <div className='col'>{this.state.endtime}</div>
+                    </div>
+                </div>
                 <h3>Lifts</h3>
+                {/* <Form onSubmit={() => {}} inputs={[input]} /> */}
                 <Table headerColumns={['ID', 'Name', 'Description']} bodyRows={workoutLifts} />
-                {/* <AddWorkoutLift /> */}
             </div>
         )
     }

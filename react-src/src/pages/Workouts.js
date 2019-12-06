@@ -30,10 +30,9 @@ export default class Workouts extends Component {
     }
 
     render() {
-        const headerColumns = ['ID', 'Start Time', 'End Time']
+        const headerColumns = ['Start Time', 'End Time']
         const bodyRows = this.state.workouts.map(workout => (
             <tr onClick={() => this.openWorkout(workout.id)} key={workout.id}>
-                <td>{workout.id}</td>
                 <td>{workout.starttime}</td>
                 <td>{workout.endtime}</td>
             </tr>
