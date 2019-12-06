@@ -9,7 +9,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha || true",
-    "start": "nodemon index.js"
+    "start": "cd react-src && npm run-script build && cd .. && node index.js"
   },
   "author": "Nick Coffey",
   "license": "ISC",
