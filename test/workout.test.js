@@ -119,7 +119,7 @@ describe('Workout API', () => {
 
     describe('Delete One - Not Found', () => {
         it('should return a not deleted message', (done) => {
-            testUtils.del(url, { id: notFoundWorkoutID })
+            testUtils.del(`${url}/${notFoundWorkoutID}`)
                 .end((err, res) => {
                     if (err) {
                         console.log(err)
@@ -133,7 +133,7 @@ describe('Workout API', () => {
 
     describe('Delete One By ID', () => {
         it('should delete one workout', (done) => {
-            testUtils.del(url, { id: workoutID })
+            testUtils.del(`${url}/${workoutID}`)
                 .end((err, res) => {
                     if (err) {
                         console.log(err)

@@ -17,6 +17,9 @@ export default function WorkoutDetails(props) {
                         {millisToMinutesAndSeconds(Math.abs(new Date(props.endtime) - new Date(props.starttime)))}
                     </div>
                 </div>
+                <div>
+                    <button type='button' className='btn btn-danger' data-toggle='modal' data-target='#deleteModal'>Delete Workout</button>
+                </div>
             </div>
         )
     }
@@ -25,8 +28,8 @@ export default function WorkoutDetails(props) {
 }
 
 WorkoutDetails.propTypes = {
-    starttime: PropTypes.string.isRequired,
-    endtime: PropTypes.string.isRequired,
+    starttime: PropTypes.string,
+    endtime: PropTypes.string,
     isNew: PropTypes.bool.isRequired,
     isInProgress: PropTypes.bool.isRequired
 }

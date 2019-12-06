@@ -42,7 +42,7 @@ export default class Workouts extends Component {
             <div>
                 <h3>Past Workouts</h3>
                 <hr />
-                <Link to='/workout/0'><button type='button' className='btn btn-primary btn-lg'>New Workout</button></Link>
+                <Link to='/workout/0'><button type='button' className='btn btn-primary'>Start A New Workout</button></Link>
                 <br /><br />
                 <Table headerColumns={headerColumns} bodyRows={bodyRows} />
             </div>

@@ -8,9 +8,9 @@ export default function WorkoutHeader(props) {
     }
 
     return (
-        <h2>
+        <h3>
             {headerText}
-        </h2>
+        </h3>
     )
 }
 

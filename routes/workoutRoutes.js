@@ -34,9 +34,9 @@ router.put('', (req, res) => {
 })
 
 // Delete a workout by id
-router.delete('', (req, res) => {
-    var id = req.body.id
-    dbUtils.deleteOneByID(res, table, req.body.id, `Workout ${id} deleted`, `Workout ${id} not deleted`)
+router.delete('/:id', (req, res) => {
+    var id = req.params.id
+    dbUtils.deleteOneByID(res, table, id, `Workout ${id} deleted`, `Workout ${id} not deleted`)
 })
 
 module.exports = router

@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import Form from '../components/common/Form/Form'
 import Table from '../components/common/Table'
+import DeletePopup from '../components/common/DeletePopup'
 import WorkoutHeader from '../components/workout/WorkoutHeader'
 import WorkoutTimer from '../components/workout/WorkoutTimer'
 import WorkoutDetails from '../components/workout/WorkoutDetails'
-import { getAllByID, getOneByID, createOne, updateOneByID } from '../util/APIUtils'
+import { getAllByID, getOneByID, createOne, updateOneByID, deleteOneByID } from '../util/APIUtils'
 import { getCurrentDateString } from '../util/DateUtils'
 
 export default class Workout extends Component {
@@ -22,6 +23,7 @@ export default class Workout extends Component {
         this.startWorkout = this.startWorkout.bind(this)
         this.endWorkout = this.endWorkout.bind(this)
         this.startWorkoutTimer = this.startWorkoutTimer.bind(this)
+        this.deleteWorkout = this.deleteWorkout.bind(this)
     }
 
     startWorkout() {
@@ -62,6 +64,14 @@ export default class Workout extends Component {
         })
     }
 
+    deleteWorkout() {
+        deleteOneByID('workout', this.state.id).then(data => {
+            if(data.id === undefined) {
+                this.props.history.push('/')
+            }
+        })
+    }
+
     componentDidMount() {
         const workoutID = this.props.match.params.id
         if(parseInt(workoutID) === 0) {
@@ -92,6 +102,7 @@ export default class Workout extends Component {
                 <WorkoutHeader isNew={this.state.isNew} />
                 <WorkoutTimer isNew={this.state.isNew} isInProgress={this.state.isInProgress} starttime={this.state.starttime} endtime={this.state.endtime} startWorkout={this.startWorkout} endWorkout={this.endWorkout} />
                 <WorkoutDetails isNew={this.state.isNew} isInProgress={this.state.isInProgress} starttime={this.state.starttime} endtime={this.state.endtime} />
+                <DeletePopup item='Workout' onDelete={this.deleteWorkout} />
                 {/* <h3>Lifts</h3>
                 <Form onSubmit={() => {}} inputs={[input]} />
                 <Table headerColumns={['ID', 'Name', 'Description']} bodyRows={workoutLifts} /> */}

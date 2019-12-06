@@ -52,3 +52,11 @@ export function updateOneByID(table, body) {
                 })
                 .catch(err => { return {} })
 }
+
+export function deleteOneByID(table, id) {
+        return axios.delete(`${URL}/${table}/${id}`)
+                .then(res => {
+                        return returnValue(res.data, false)
+                })
+                .catch(err => { return {} })
+}
