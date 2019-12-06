@@ -40,9 +40,10 @@ export default class Workouts extends Component {
         
         return (
             <div>
-                <h1>Workouts</h1>
+                <h3>Past Workouts</h3>
                 <hr />
                 <Link to='/workout/0'><button type='button' className='btn btn-primary btn-lg'>New Workout</button></Link>
+                <br /><br />
                 <Table headerColumns={headerColumns} bodyRows={bodyRows} />
             </div>
         )
