@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from'react-router-dom'
-import { getAll } from '../api/APIUtils'
+import { getAll } from '../util/APIUtils'
 import Table from '../components/common/Table'
 
 export default class Workouts extends Component {

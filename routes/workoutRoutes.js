@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const dbUtils = require('../util/dbUtils')
-var selectReturnFields = ['id', "to_char(startTime, 'MM/DD/YYYY HH:MI AM') as startTime", "to_char(endTime, 'MM/DD/YYYY HH:MI AM') as endTime"]
+var selectReturnFields = ['id', "to_char(startTime, 'MM/DD/YYYY HH:MI:SS AM') as startTime", "to_char(endTime, 'MM/DD/YYYY HH:MI:SS AM') as endTime"]
 
 var table = 'workout'
 

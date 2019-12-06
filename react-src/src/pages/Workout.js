@@ -1,7 +1,11 @@
 import React, { Component } from 'react'
 import Form from '../components/common/Form/Form'
 import Table from '../components/common/Table'
-import { getAllByID, getOneByID, createOne, updateOneByID } from '../api/APIUtils'
+import WorkoutHeader from '../components/workout/WorkoutHeader'
+import WorkoutTimer from '../components/workout/WorkoutTimer'
+import WorkoutDetails from '../components/workout/WorkoutDetails'
+import { getAllByID, getOneByID, createOne, updateOneByID } from '../util/APIUtils'
+import { getCurrentDateString } from '../util/DateUtils'
 
 export default class Workout extends Component {
     constructor(props) {
@@ -9,6 +13,8 @@ export default class Workout extends Component {
         this.state = {
             isInProgress: false,
             isNew: false,
+            intervalID: 0,
+            workoutTimer: '',
             id: 'Not found',
             starttime: 'Not found',
             endtime: 'Not found',
@@ -16,36 +22,20 @@ export default class Workout extends Component {
         }
         this.startWorkout = this.startWorkout.bind(this)
         this.endWorkout = this.endWorkout.bind(this)
-        this.getCurrentDateString = this.getCurrentDateString.bind(this)
-        this.convertToFull = this.convertToFull.bind(this)
-    }
-
-    convertToFull(text) {
-        if(text.length === 1) {
-            text = `0${text}`
-        }
-        return text
-    }
-
-    getCurrentDateString() {
-        var date = new Date()
-        var fullHours = this.convertToFull(date.getHours().toString())
-        var fullMinutes = this.convertToFull(date.getMinutes().toString())
-        var fullMonth = this.convertToFull(date.getMonth().toString())
-        var fullDay = this.convertToFull(date.getDate().toString())
-        return `${date.getFullYear()}-${fullMonth}-${fullDay} ${fullHours}:${fullMinutes}`
+        this.startWorkoutTimer = this.startWorkoutTimer.bind(this)
     }
 
     startWorkout() {
         const newWorkout = {
             id: 0,
-            starttime:  this.getCurrentDateString(),
+            starttime:  getCurrentDateString(),
             endtime: null
         }
         createOne('workout', newWorkout).then(workout => {
             this.setState(workout)
             if(workout.id !== undefined && workout.id !== 0) {
                 this.setState({isNew: false, isInProgress: true})
+                this.startWorkoutTimer()
                 getAllByID('workoutLift', this.state.id).then(workoutLifts => this.setState({workoutLifts: workoutLifts}))
             }
         })
@@ -55,13 +45,22 @@ export default class Workout extends Component {
         const updateWorkout = {
             id: this.state.id,
             starttime:  this.state.starttime,
-            endtime: this.getCurrentDateString()
+            endtime: getCurrentDateString()
         }
         updateOneByID('workout', updateWorkout).then(workout => {
             if(workout.id !== undefined && workout.id !== 0) {
+                clearInterval(this.state.intervalID)
                 this.setState({isInProgress: false, endtime: workout.endtime})
             }
         })
+    }
+
+    startWorkoutTimer() {
+        var intervalID = setInterval(() => {
+            var currentDate = new Date(Math.abs(new Date() - new Date(this.state.starttime)))
+            this.setState({workoutTimer: `${currentDate.getMinutes()}:${currentDate.getSeconds()}`})
+        }, 1000)
+        this.setState({intervalID: intervalID})
     }
 
     componentDidMount() {
@@ -75,18 +74,6 @@ export default class Workout extends Component {
     }
 
     render() {
-        var headerText = 'Workout'
-        if (this.state.isNew) {
-            headerText = 'New Workout'
-        }
-
-        var button = (<div></div>)
-        if (this.state.isInProgress) {
-            button = (<button type='button' className='btn btn-primary btn-lg' onClick={this.endWorkout}>End Workout</button>)
-        } else if (this.state.isNew) {
-            button = (<button type='button' className='btn btn-primary btn-lg' onClick={this.startWorkout}>Start Workout</button>)
-        }
-
         const workoutLifts = this.state.workoutLifts.map(workoutLift => (
             <tr key={workoutLift.id}>
                 <td>{workoutLift.id}</td>
@@ -94,6 +81,10 @@ export default class Workout extends Component {
                 <td>{workoutLift.description}</td>
             </tr>
         ))
+        var details = (<div></div>)
+        if(!this.state.isNew && !this.state.isInProgress && this.state.endtime !== 'Not found') {
+            details = (<WorkoutDetails starttime={this.state.starttime} endtime={this.state.endtime} />)
+        }
 
         // const input = {
         //     id: 'name',
@@ -103,21 +94,12 @@ export default class Workout extends Component {
 
         return (
             <div>
-                <h1>{headerText}</h1>
-                {button}
-                <div className='container'>
-                    <div className='row'>
-                        <h3 className='col'>Start Time</h3>
-                        <h3 className='col'>End Time</h3>
-                    </div>
-                    <div className='row'>
-                        <div className='col'>{this.state.starttime}</div>
-                        <div className='col'>{this.state.endtime}</div>
-                    </div>
-                </div>
-                <h3>Lifts</h3>
-                {/* <Form onSubmit={() => {}} inputs={[input]} /> */}
-                <Table headerColumns={['ID', 'Name', 'Description']} bodyRows={workoutLifts} />
+                <WorkoutHeader isNew={this.state.isNew} />
+                <WorkoutTimer isNew={this.state.isNew} isInProgress={this.state.isInProgress} workoutLength={this.state.workoutTimer} startWorkout={this.startWorkout} endWorkout={this.endWorkout} />
+                {details}
+                {/* <h3>Lifts</h3>
+                <Form onSubmit={() => {}} inputs={[input]} />
+                <Table headerColumns={['ID', 'Name', 'Description']} bodyRows={workoutLifts} /> */}
             </div>
         )
     }
