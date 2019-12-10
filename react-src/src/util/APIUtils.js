@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const port = process.env.IS_AWS === 'true' ? process.env.PORT : 2000
+const port = 2000
 const URL = `http://localhost:${port}/api`
 
 export function returnValue(json, isArray) {
