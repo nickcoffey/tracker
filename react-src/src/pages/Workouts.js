@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from'react-router-dom'
 import { getAll } from '../util/APIUtils'
+import { timeZone, displayDateTimeFormat } from '../util/DateUtils'
 import Table from '../components/common/Table'
+import moment from 'moment-timezone'
 
 export default class Workouts extends Component {
     constructor(props) {
@@ -18,7 +20,13 @@ export default class Workouts extends Component {
     }
 
     getAllWorkouts() {
-        getAll('workout').then(workouts => this.setState({workouts: workouts}))
+        getAll('workout').then(workouts => {
+            workouts.forEach(workout => {
+                workout.starttime = moment(workout.starttime).tz(timeZone).format(displayDateTimeFormat)
+                workout.endtime = workout.endtime != null ? moment(workout.endtime).tz(timeZone).format(displayDateTimeFormat) : null
+            })
+            this.setState({workouts: workouts})
+        })
     }
 
     openWorkout(id) {

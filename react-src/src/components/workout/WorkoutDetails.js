@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { millisToMinutesAndSeconds } from '../../util/DateUtils'
+import moment from 'moment-timezone'
+import { createDateFormat, displayDateFormat, timeZone } from '../../util/DateUtils'
 
 export default function WorkoutDetails(props) {
     var details = (<div></div>)
@@ -10,11 +11,11 @@ export default function WorkoutDetails(props) {
                 <div className='row'>
                     <div className='col'>
                         <strong>Date Started: </strong>
-                        {new Date(props.starttime).toLocaleDateString()}
+                        {moment().tz(timeZone).format(displayDateFormat)}
                     </div>
                     <div className='col'>
                         <strong>Workout Length: </strong>
-                        {millisToMinutesAndSeconds(Math.abs(new Date(props.endtime) - new Date(props.starttime)))}
+                        {moment(moment(props.endtime, createDateFormat).diff(moment(props.starttime, createDateFormat))).format('mm:ss')}
                     </div>
                 </div>
                 <div>

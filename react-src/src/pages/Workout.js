@@ -5,8 +5,9 @@ import DeletePopup from '../components/common/DeletePopup'
 import WorkoutHeader from '../components/workout/WorkoutHeader'
 import WorkoutTimer from '../components/workout/WorkoutTimer'
 import WorkoutDetails from '../components/workout/WorkoutDetails'
+import { timeZone, createDateFormat } from '../util/DateUtils'
 import { getAllByID, getOneByID, createOne, updateOneByID, deleteOneByID } from '../util/APIUtils'
-import { getCurrentDateString } from '../util/DateUtils'
+import moment from 'moment-timezone'
 
 export default class Workout extends Component {
     constructor(props) {
@@ -29,12 +30,12 @@ export default class Workout extends Component {
     startWorkout() {
         const newWorkout = {
             id: this.state.id,
-            starttime:  getCurrentDateString(),
+            starttime: moment().tz(timeZone).format(createDateFormat),
             endtime: null
         }
         createOne('workout', newWorkout).then(workout => {
             if(workout.id !== undefined && workout.id !== 0) {
-                workout.endtime = getCurrentDateString()
+                workout.endtime = moment().tz(timeZone).format(createDateFormat)
                 this.setState(workout)
                 this.setState({isNew: false, isInProgress: true})
                 this.startWorkoutTimer()
@@ -45,7 +46,7 @@ export default class Workout extends Component {
 
     startWorkoutTimer() {
         var intervalID = setInterval(() => {
-            this.setState({endtime: getCurrentDateString()})
+            this.setState({endtime: moment().tz(timeZone).format(createDateFormat)})
         }, 1000)
         this.setState({intervalID: intervalID})
     }

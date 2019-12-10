@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 export default function Table(props) {
     const columns = props.headerColumns.map(((column, index) =>
-        <td key={index}>{column}</td>
+        <th key={index}>{column}</th>
     ))
 
     return (

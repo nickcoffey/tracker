@@ -24,7 +24,7 @@ module.exports.logger = logger
 
 // DB setup
 const { Client } = require('pg')
-const client = new Client(config.pgConfig)
+const client = new Client(process.env.IS_AWS === 'YES' ? config.pgAWS : config.pgLocal)
 client.connect(err => {
     if (err) {
         logger.error('DB connection error', err)
