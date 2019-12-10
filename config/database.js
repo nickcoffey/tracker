@@ -6,10 +6,10 @@ module.exports.pgLocal = {
     database: 'tracker'
 }
 
-module.exports.pgHeroku = {
-    host: 'ec2-174-129-255-7.compute-1.amazonaws.com',
-    user: 'pkvbncxlugjzmv',
+module.exports.pgAWS = {
+    host: 'tracker-db.cvsyojwbt8yt.us-east-2.rds.amazonaws.com',
+    user: 'postgres',
     password: process.env.postgresPW,
     port: '5432',
-    database: 'dap387s51amon5'
+    database: 'tracker'
 }
