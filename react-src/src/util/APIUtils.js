@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-const URL = '/api'
-// const URL = 'http://localhost:2000/api'
+// const URL = '/api'
+const URL = 'http://localhost:2000/api'
 
 export function returnValue(json, isArray) {
         var value = {}

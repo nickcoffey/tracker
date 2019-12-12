@@ -2,7 +2,8 @@
 const express = require('express')
 const path = require('path')
 const app = express()
-var port = 2000
+// const port = 2000
+const port = 80
 const config = require('./config/database')
 
 // CORS Setup
@@ -24,7 +25,7 @@ module.exports.logger = logger
 
 // DB setup
 const { Client } = require('pg')
-const client = new Client(process.env.IS_AWS === 'YES' ? config.pgAWS : config.pgLocal)
+const client = new Client(config.pgConfig)
 client.connect(err => {
     if (err) {
         logger.error('DB connection error', err)
