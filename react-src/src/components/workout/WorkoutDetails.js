@@ -19,7 +19,8 @@ export default function WorkoutDetails(props) {
                     </div>
                 </div>
                 <div>
-                    <button type='button' className='btn btn-danger' data-toggle='modal' data-target='#deleteModal'>Delete Workout</button>
+                    <button type='button' className='btn btn-primary' data-toggle='modal' data-target='#formModal'>Update</button>
+                    <button type='button' className='btn btn-danger' data-toggle='modal' data-target='#deleteModal'>Delete</button>
                 </div>
             </div>
         )
