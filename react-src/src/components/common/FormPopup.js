@@ -7,19 +7,31 @@ export default class FormPopup extends Component {
         this.state = {}
         this.onChange = this.onChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
+        this.onClear = this.onClear.bind(this)
+        this.getCurrentValues = this.getCurrentValues.bind(this)
     }
 
-    onSubmit() { // to avoid auto submitting
+    onSubmit() { // here to stop auto DB calls
         this.props.onSubmit(this.state)
+    }
+
+    getCurrentValues() {
+        this.setState(this.props.getValues())
     }
 
     onChange(event) {
         this.setState({[event.target.id]: event.target.value})
     }
 
+    onClear() {
+        this.props.inputs.forEach(input => {
+            this.setState({[input.id]: ''})
+        })
+    }
+
     componentDidMount() {
         this.props.inputs.forEach(input => {
-            this.setState({[input.id]: input.value})
+            this.setState({[input.id]: ''})
         })
     }
 
@@ -27,7 +39,7 @@ export default class FormPopup extends Component {
         const inputs = this.props.inputs.map(input => (
             <div className='form-group' key={input.id}>
                 <label htmlFor={input.id}>{input.label}: </label>
-                <input type={input.type} className='form-control' id={input.id} name={input.id} value={this.state.value} onChange={this.onChange} />
+                <input type={input.type} className='form-control' id={input.id} name={input.id} value={this.state[input.id] || ''} onChange={this.onChange} />
             </div>
         ))
 
@@ -41,12 +53,12 @@ export default class FormPopup extends Component {
                                 <span aria-hidden='true'>&times;</span>
                             </button>
                         </div>
-                    <form onSubmit={this.onSubmit}>
+                    <form>
                         <div className='modal-body'>{inputs}</div>
                         <div className='modal-footer'>
-                            <button type='button' className='btn btn-secondary' data-dismiss='modal'>Close</button>
-                            <button type='reset' className='btn btn-warning'>Clear</button>
-                            <button type='submit' className='btn btn-primary'>Submit</button>
+                            {this.props.isUpdate ? <button type='button' className='btn btn-secondary' onClick={this.getCurrentValues}>Get Current Values</button> : null}
+                            <button type='reset' className='btn btn-warning' onClick={this.onClear}>Clear</button>
+                            <button type='button' className='btn btn-primary' onClick={this.onSubmit} data-dismiss='modal'>Submit</button>
                         </div>
                     </form>
                     </div>
@@ -58,5 +70,7 @@ export default class FormPopup extends Component {
 
 FormPopup.propTypes = {
     inputs: PropTypes.array.isRequired,
-    onSubmit: PropTypes.func.isRequired
+    onSubmit: PropTypes.func.isRequired,
+    isUpdate: PropTypes.bool.isRequired,
+    getValues: PropTypes.func
 }
